@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom';
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 import Dashboard from './Dashboard';
@@ -13,7 +13,7 @@ function App() {
     <Router>
       <UserProvider>
       <div>
-        <nav>
+        {/* <nav>
           <ul>
             <li>
               <Link to="/login">Login</Link>
@@ -22,7 +22,7 @@ function App() {
               <Link to="/register">Register</Link>
             </li>
           </ul>
-        </nav>
+        </nav> */}
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -39,4 +39,3 @@ function App() {
 }
 
 export default App;
-

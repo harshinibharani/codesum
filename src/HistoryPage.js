@@ -1,10 +1,21 @@
-// HistoryPage.js
-import {React,useContext} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from './UserContext';
-import { useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+    Box,
+    Card,
+    CardContent,
+    Typography,
+    Grid,
+    CircularProgress,
+    Button
+} from '@mui/material';
+import './styles/Navbar.css'; // Import your custom Navbar CSS
+
 function HistoryPage() {
-  const { user } = useContext(UserContext);
-  const [history, setHistory] = useState([]);
+    const { user, setUser } = useContext(UserContext);
+    const navigate = useNavigate();
+    const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -32,24 +43,85 @@ function HistoryPage() {
         }
     }, [user]);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <CircularProgress />;
     if (error) return <div>Error: {error}</div>;
 
+    const handleDashboardClick = () => {
+        navigate('/dashboard');
+    };
+
+    const handleLogout = () => {
+        setUser(null);
+        navigate('/login');
+    };
+
     return (
-        <div>
-            <h1>History Page {user ? user.username : 'Guest'}!!</h1>
+        
+<Box sx={{ backgroundColor: 'linear-gradient(135deg, #287279, #01b7c1)', minHeight: '100vh' }}>            <nav className="sticky">
+                <div className="nav-content">
+                    <div className="title">
+                        <a href="#">My History</a>
+                    </div>
+                    <ul className="nav-links">
+                        <li><a href="#" onClick={handleDashboardClick}>Dashboard</a></li>
+                        <li><a href="#" onClick={handleLogout}>Logout</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <div style={{ padding: '50px' }}>
             {history.length > 0 ? (
-                <ul>
+                <Grid container spacing={2}>
                     {history.map((item, index) => (
-                        <li key={index}>
-                            {item.inputCode} - {item.selectedSummary} - Feedback: {item.feedback} - usefulness {item.usefulness} - naturalness {item.naturalness} - consistency {item.consistency}
-                        </li>
+                        <Grid key={index} item xs={12} sm={6} md={4}>
+                            <Card sx={{ height: 350 }}>
+                                <CardContent sx={{ maxHeight: 300, overflowY: 'auto' }}>
+                                    <Typography variant="h6" component="div">
+                                        Input Code
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {item.inputCode}
+                                    </Typography>
+                                    <Typography variant="h6" component="div">
+                                        Summary
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {item.selectedSummary}
+                                    </Typography>
+                                    <Typography variant="h6" component="div">
+                                        Feedback
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {item.feedback}
+                                    </Typography>
+                                    <Typography variant="h6" component="div">
+                                        Usefulness
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {item.usefulness}
+                                    </Typography>
+                                    <Typography variant="h6" component="div">
+                                        Naturalness
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {item.naturalness}
+                                    </Typography>
+                                    <Typography variant="h6" component="div">
+                                        Consistency
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {item.consistency}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
                     ))}
-                </ul>
+                </Grid>
             ) : (
-                <p>No history found.</p>
+                <Typography variant="body1">No history found.</Typography>
             )}
-        </div>
+            </div>
+        </Box>
+        
     );
 }
 

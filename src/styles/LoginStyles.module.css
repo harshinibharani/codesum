@@ -1,0 +1,70 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    /*background: linear-gradient(135deg, #1f4447, #01b7c1);*/
+    background: radial-gradient(circle, #01b7c1, #1f4447);
+    font-family: 'Poppins', sans-serif;
+}
+  
+.form {
+    width: 340px;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.link {
+    color: #EEEEEE; /* White color */
+    text-decoration: none; /* Optional: Removes underline */
+}
+
+.link:hover {
+    text-decoration: underline; /* Adds an underline on hover */
+}
+
+.input::placeholder {
+    color: rgba(255, 255, 255, 0.961); /* Sets the placeholder text color to light grey */
+}
+
+.title {
+    font-size: 28px;
+    color: #EEEEEE;
+    margin-bottom: 30px;
+}
+
+.input,
+.button {
+    width: 100%;
+    padding: 15px;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 15px;
+    background-color: rgba(255, 255, 255, 0.07);
+    color: #EEEEEE;
+}
+
+.button {
+    background-color: #EEEEEE;
+    color: #01b7c1; /* Change button text color to black */
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button:hover {
+    background-color: #e0e1e7;
+}
+
+
+
+.error {
+    color: #f55;
+    text-align: center;
+}

@@ -1,20 +1,47 @@
-import React, { useState, useContext } from 'react';
-import {OpenAI} from 'openai';
-// import { useLocation } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { OpenAI } from 'openai';
 import { UserContext } from './UserContext';
 import { useNavigate } from 'react-router-dom';
+import {
+    Typography,
+    Button,
+    TextField,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    CircularProgress,
+    Box,
+    Grid,
+    Card,
+    CardContent,
+    CardActions
+} from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: '#01b7c1'
+        },
+        secondary: {
+            main: '#287279'
+        }
+    },
+    typography: {
+        fontFamily: 'Poppins, sans-serif',
+        h6: {
+            fontWeight: 'bold'
+        }
+    }
+});
 
 function Dashboard() {
-
-    // const location = useLocation();
-    // const userData = location.state?.userData;
     const [code, setCode] = useState('');
     const [numberOfSummaries, setNumberOfSummaries] = useState('1');
     const [summaries, setSummaries] = useState([]);
     const [selectedSummary, setSelectedSummary] = useState(null);
     const [loading, setLoading] = useState(false);
-    // console.log("in dash",userData);
 
     const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
@@ -23,61 +50,41 @@ function Dashboard() {
     const [usefulness, setUsefulness] = useState('');
     const [consistency, setConsistency] = useState('');
     const [naturalness, setNaturalness] = useState('');
-
+    const [formValid, setFormValid] = useState(false);
 
     const openai = new OpenAI({
-        apiKey: process.env.REACT_APP_API_KEY , dangerouslyAllowBrowser: true // Ensure your API key is stored securely
-});
-    // const openai = new OpenAI(config);
+        apiKey: process.env.REACT_APP_API_KEY, dangerouslyAllowBrowser: true // Ensure your API key is stored securely
+    });
 
     const fetchSummaries = async () => {
-        console.log("Starting to fetch summaries...");
         setLoading(true);
-        const system_prompt = `give ${numberOfSummaries} code summaries for the below code as a paragraph, each paragraph seperated by '$$'`;
+        const system_prompt = `give ${numberOfSummaries} code summaries for the below code as a paragraph, each paragraph separated by '$$'`;
         const user_input = `Input - ${code} Output -`;
-        console.log(`Generated system prompt: ${system_prompt}`);
-        console.log(`User input for API: ${user_input}`);
 
-        
         try {
             const response = await openai.chat.completions.create({
                 model: "gpt-3.5-turbo",
-                messages : [{"role": "system", "content":system_prompt},
-                {"role": "user", "content":user_input}]
+                messages: [{ "role": "system", "content": system_prompt }, { "role": "user", "content": user_input }]
             });
 
-            console.log("API response received:", response);
-            console.log(response.choices[0].message.content);
             if (response.choices && response.choices.length > 0 && response.choices[0].message) {
-                console.log("API response received:", response);
                 const summaryText = response.choices[0].message.content;
-                console.log("Raw summary text:", summaryText);
                 const summariesArray = summaryText.split('$$').map(s => s.trim()).filter(s => s !== "");
-                console.log("Summaries array:", summariesArray);
                 setSummaries(summariesArray);
             } else {
                 throw new Error("No valid summary received.");
             }
-            console.log("Summary set in state.");
         } catch (error) {
             console.error('Error fetching summaries:', error);
             setSummaries(['Error fetching summaries']);
-            console.log("Error details set in state.");
         }
         setLoading(false);
-        console.log("Fetching summaries completed. Loading state updated.");
     };
 
-    const handleSummarySelection = (index) => {
-        setSelectedSummary(index);
-        console.log(`Selected summary ${index + 1}: ${summaries[index]}`);
-    };    
+    const handleSummarySelection = (index) => setSelectedSummary(index);
 
-    
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("Form submitted with code:", code);
-        console.log(`Requested number of summaries: ${numberOfSummaries}`);
         fetchSummaries();
     };
 
@@ -90,20 +97,9 @@ function Dashboard() {
         setConsistency('');
         setNaturalness('');
     };
-    
+
     const saveSelectedSummary = async () => {
-        if (!usefulness) {
-            alert('Please select a rating for usefulness.');
-            return;
-        }
-        if (!naturalness) {
-            alert('Please select a rating for naturalness.');
-            return;
-        }
-        if (!consistency) {
-            alert('Please select a rating for consistency.');
-            return;
-        }
+        
         if (selectedSummary !== null) {
             const selectedData = summaries[selectedSummary];
             try {
@@ -116,139 +112,200 @@ function Dashboard() {
                         userId: user._id,
                         inputCode: code,
                         selectedSummary: selectedData,
-                        feedback: feedback,
-                        naturalness: naturalness,
-                        usefulness: usefulness,
-                        consistency: consistency
+                        feedback,
+                        naturalness,
+                        usefulness,
+                        consistency
                     })
                 });
                 const data = await response.json();
-                console.log(data.message);
-                alert('Feedback saved successfully!');
+                
             } catch (error) {
                 console.error('Error saving feedback:', error);
-                alert('Failed to save feedback.');
             }
         } else {
             alert('No summary selected!');
         }
     };
-    const handleHistoryClick = () => {
-        // Navigate to HistoryPage
-        navigate('/history');
-    };
 
+    const handleHistoryClick = () => navigate('/history');
     const handleLogout = () => {
-        // Clear the user context
         setUser(null);
-        // Redirect to the login page
         navigate('/login');
     };
 
+    // Validate form fields
+    const validateForm = () => {
+        setFormValid(usefulness && naturalness && consistency);
+    };
+
+    // Update form validity on field change
+    useEffect(() => {
+        validateForm();
+    }, [usefulness, naturalness, consistency]);
+
     return (
-        <div>
-            <h1>Dashboard {user ? user.username : 'Guest'}!!</h1>
-            <button onClick={handleHistoryClick}>View History</button>
-            <button onClick={handleLogout}>Logout</button>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="codeBox">Code:</label>
-                    <textarea
-                        id="codeBox"
-                        value={code}
-                        onChange={e => setCode(e.target.value)}
-                        style={{ width: '100%', height: '150px' }}
-                        required
-                    />
+        <ThemeProvider theme={theme}>
+            <Box sx={{ backgroundColor: 'linear-gradient(135deg, #287279, #01b7c1)', minHeight: '100vh' }}>
+            <nav className="sticky">
+                <div className="nav-content">
+                    <div className="title">
+                        <a href="#">Dashboard</a>
+                    </div>
+                    <ul className="nav-links">
+                        <li><a href="#" onClick={handleHistoryClick}>My History</a></li>
+                        <li><a href="#" onClick={handleLogout}>Logout</a></li>
+                    </ul>
                 </div>
-                <div>
-                    <label htmlFor="summaryCount">Number of Summaries:</label>
-                    <select
-                        id="summaryCount"
-                        value={numberOfSummaries}
-                        onChange={e => setNumberOfSummaries(e.target.value)}
-                        style={{ width: '100px' }}
-                    >
-                        {Array.from({ length: 10 }, (_, i) => i + 1).map(number => (
-                            <option key={number} value={number}>
-                                {number}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-               
-                <button type="submit" disabled={loading}>{loading ? 'Loading...' : 'Submit'}</button>
-                <button type="button" onClick={resetForm}>Clear</button>  {/* New button for clearing the form */}
-            </form>
-            <div>
-                <h2>Summaries</h2>
-                {loading ? (
-                    <p>Loading summaries...</p>
-                ) : summaries.length > 0 ? (
-                    summaries.map((summary, index) => (
-                        <div key={index}>
-                            <input
-                                type="radio"
-                                id={`summary-${index}`}
-                                name="summary"
-                                value={index}
-                                checked={selectedSummary === index}
-                                onChange={() => handleSummarySelection(index)}
-                            />
-                            <label htmlFor={`summary-${index}`}>{summary}</label>
-                        </div>
-                    ))
-                ) : (
-                    <p>No summary available.</p>
-                )}
-            </div>
-            {selectedSummary !== null && (
-                <div>
-                    <h3>You selected:</h3>
-                    <p>{summaries[selectedSummary]}</p>
-                    <div>
-                        <label htmlFor="feedback">Feedback:</label>
-                        <textarea
-                            id="feedback"
-                            value={feedback}
-                            onChange={e => setFeedback(e.target.value)}
-                            placeholder="Enter your feedback here..."
-                            style={{ width: '100%', height: '100px' }}
+            </nav>
+                <Box sx={{ px: 4, py: 4 }}>
+                    <Typography variant="h4" gutterBottom>
+                        Hi, {user ? user.username : 'Guest'} 👋
+                    </Typography>
+                    <form onSubmit={handleSubmit}>
+                        <TextField
+                            id="codeBox"
+                            label="Code"
+                            multiline
+                            rows={6}
+                            value={code}
+                            onChange={e => setCode(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                            required
                         />
-                    </div>
-                    <div>
-                        <label htmlFor="usefulness">Usefulness:</label>
-                        <select id="usefulness" value={usefulness} onChange={e => setUsefulness(e.target.value) } required>
-                            <option value="">Select Rating</option>
-                            {[1, 2, 3, 4, 5].map(value => (
-                                <option key={value} value={value}>{value}</option>
+                        <FormControl fullWidth margin="normal" variant="outlined">
+                            <InputLabel id="summaryCount-label" shrink={true}>Number of Summaries</InputLabel>
+                            <Select
+                                labelId="summaryCount-label"
+                                id="summaryCount"
+                                value={numberOfSummaries}
+                                onChange={e => setNumberOfSummaries(e.target.value)}
+                                label="Number of Summaries" // Needed for the outlined variant
+                            >
+                                {Array.from({ length: 10 }, (_, i) => i + 1).map(number => (
+                                    <MenuItem key={number} value={number}>
+                                        {number}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                        <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                            {loading ? <CircularProgress size={24} /> : 'Submit'}
+                        </Button>
+                        <Button type="button" onClick={resetForm} variant="outlined" sx={{ ml: 2 }}>
+                            Clear
+                        </Button>
+                    </form>
+                    
+                    <Box sx={{ mt: 2 }}>
+                        <Typography variant="h5" gutterBottom>
+                            Summaries
+                        </Typography>
+                    </Box>
+                    {loading ? (
+                        <CircularProgress />
+                    ) : summaries.length > 0 ? (
+                        <Grid container spacing={2}>
+                            {summaries.map((summary, index) => (
+                                <Grid key={index} item xs={12} sm={6} md={4}>
+                                <Card
+                                    variant="outlined"
+                                    sx={{ cursor: 'pointer', border: selectedSummary === index ? '2px solid #01b7c1' : '2px solid transparent' }}
+                                    onClick={() => handleSummarySelection(index)}
+                                >
+                                    <CardContent>
+                                        <Typography variant="body1" gutterBottom sx={{ textAlign: 'justify' }}>
+                                            {summary}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button size="small">Select</Button>
+                                    </CardActions>
+                                </Card>
+                            </Grid>
                             ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label htmlFor="consistency">Consistency:</label>
-                        <select id="consistency" value={consistency} onChange={e => setConsistency(e.target.value)} required>
-                            <option value="">Select Rating</option>
-                            {[1, 2, 3, 4, 5].map(value => (
-                                <option key={value} value={value}>{value}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label htmlFor="naturalness">Naturalness:</label>
-                        <select id="naturalness" value={naturalness} onChange={e => setNaturalness(e.target.value)} required>
-                            <option value="">Select Rating</option>
-                            {[1, 2, 3, 4, 5].map(value => (
-                                <option key={value} value={value}>{value}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <button onClick={saveSelectedSummary}>Save Feedback</button>
-                </div>
-            )}
-        </div>
+                        </Grid>
+                    ) : (
+                        <Typography>No summary available.</Typography>
+                    )}
+                    {selectedSummary !== null && (
+                        <Box sx={{ mt: 4 }}>
+                            <Typography variant="h6" gutterBottom>
+                                Feedback
+                            </Typography>
+                            <TextField
+                                label="Feedback"
+                                multiline
+                                rows={4}
+                                value={feedback}
+                                onChange={e => setFeedback(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                            />
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} sm={4}>
+                                    <FormControl fullWidth margin="normal" >
+                                        <InputLabel id="usefulness-label" >Usefulness</InputLabel>
+                                        <Select
+                                            labelId="usefulness-label"
+                                            value={usefulness}
+                                            label="Usefulness"
+                                            onChange={e => setUsefulness(e.target.value)}
+                                        >
+                                            {[1, 2, 3, 4, 5].map(value => (
+                                                <MenuItem key={value} value={value}>
+                                                    {value}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <FormControl fullWidth margin="normal" >
+                                        <InputLabel id="consistency-label">Consistency</InputLabel>
+                                        <Select
+                                            labelId="consistency-label"
+                                            value={consistency}
+                                            label="Consistency"
+                                            onChange={e => setConsistency(e.target.value)}
+                                        >
+                                            {[1, 2, 3, 4, 5].map(value => (
+                                                <MenuItem key={value} value={value}>
+                                                    {value}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <FormControl fullWidth margin="normal">
+                                        <InputLabel id="naturalness-label">Naturalness</InputLabel>
+                                        <Select
+                                            labelId="naturalness-label"
+                                            value={naturalness}
+                                            label="Naturalness"
+                                            onChange={e => setNaturalness(e.target.value)}
+                                        >
+                                            {[1, 2, 3, 4, 5].map(value => (
+                                                <MenuItem key={value} value={value}>
+                                                    {value}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
+                            <Button onClick={saveSelectedSummary} variant="contained" color="secondary" sx={{ mt: 2 }} disabled={!formValid}>
+                                Save Feedback
+                            </Button>
+                        </Box>
+                    )}
+                </Box>
+            </Box>
+        </ThemeProvider>
     );
-    
 }
 
 export default Dashboard;

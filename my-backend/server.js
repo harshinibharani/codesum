@@ -1,6 +1,6 @@
 require('dotenv').config(); // This loads your environment variables from a .env file
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 
@@ -43,14 +43,26 @@ app.post('/login', async (req, res) => {
         // Compare the provided password with the stored hashed password
         const isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
+            const dateString = new Date().toLocaleDateString('en-CA'); // Canada's locale uses YYYY-MM-DD format
+            console.log(dateString);
+            await database.collection('interactions').insertOne({
+                userId: user._id,
+                date: dateString,
+                action: 'login'
+            });
+
+            // res.json({ message: 'Login successful', user: { id: user._id, username: user.username } });
             return res.json({ message: 'Login successful', user });
         } else {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
+
+        
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Server Error' });
     }
+   
 });
 
 
@@ -95,10 +107,6 @@ app.post('/saveUserHistory', async (req, res) => {
     if (!userId || !inputCode || !selectedSummary) {
         return res.status(400).json({ message: 'Essential data are missing' });
     }
-
-    // const natural = parseInt(naturalness);
-    // const useful = parseInt(usefulness);
-    // const consist = parseInt(consistency);
     try {
         const database = client.db('CodeSummary');
         const userhistory = database.collection('userhistory');
@@ -127,28 +135,6 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-// Retrieve User History route
-app.get('/getUserHistory', async (req, res) => {
-    const { userId } = req.query;  // Receive userId as a query parameter
-    if (!userId) {
-        return res.status(400).json({ message: 'UserId is required' });
-    }
-
-    try {
-        const database = client.db('CodeSummary');
-        const userhistory = database.collection('userhistory');
-
-        const history = await userhistory.find({ userId }).toArray();
-        if (history.length === 0) {
-            return res.status(404).json({ message: 'No history found for this user' });
-        }
-
-        res.json({ message: 'User history retrieved successfully', history });
-    } catch (error) {
-        console.error('Error retrieving user history:', error);
-        res.status(500).json({ message: 'Server Error', error: error.message });
-    }
-});
 
 app.get('/getAllUsers', async (req, res) => {
     try {
@@ -180,17 +166,34 @@ app.get('/getUserHistory', async (req, res) => {
     }
 });
 
+// In your server file
+app.get('/getAllUserHistories', async (req, res) => {
+    try {
+        const database = client.db('CodeSummary');
+        const userhistory = database.collection('userhistory');
+        const histories = await userhistory.find({}).toArray();
+        res.json({ histories });
+    } catch (error) {
+        console.error('Error retrieving all user histories:', error);
+        res.status(500).json({ message: 'Server Error', error: error.message });
+    }
+});
+
+
 // server.js
 app.post('/changeUserRole', async (req, res) => {
     const { userId, role } = req.body;
+   
     if (!userId || !role) {
         return res.status(400).json({ message: 'User ID and new role are required' });
     }
 
     try {
+       
         const database = client.db('CodeSummary');
         const usersCollection = database.collection('users');
-        const result = await usersCollection.updateOne({ _id: userId }, { $set: { role } });
+        const result = await usersCollection.updateOne({ _id: new ObjectId(userId) }, { $set: { role } });
+     
         if (result.modifiedCount === 1) {
             res.json({ success: true, message: 'Role updated successfully' });
         } else {
@@ -202,3 +205,75 @@ app.post('/changeUserRole', async (req, res) => {
     }
 });
 
+app.get('/summaryUsage', async (req, res) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayString = today.toISOString().split('T')[0];
+    // console.log('today',todayString);
+    const fiveDaysAgo = new Date(today.getTime() - (5 * 24 * 60 * 60 * 1000));
+    const fiveDaysAgoString = fiveDaysAgo.toISOString().split('T')[0];
+    // console.log('five days ago',fiveDaysAgoString);
+
+    try {
+        const database = client.db('CodeSummary');
+        const interactions = database.collection('interactions');
+
+        const results = await interactions.aggregate([
+            {
+                $match: {
+                    date: {
+                        $gte: fiveDaysAgoString,
+                        $lte: todayString
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: "$date",
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { "_id": 1 }
+            }
+        ]).toArray();
+
+        // console.log('results',results);
+        res.json(results);
+    } catch (error) {
+        console.error('Error retrieving summary usage:', error);
+        res.status(500).json({ message: 'Failed to fetch summary usage', error: error.message });
+    }
+});
+
+// Endpoint to get the total number of visits
+app.get('/getTotalVisits', async (req, res) => {
+    try {
+        const database = client.db('CodeSummary');
+        const interactions = database.collection('interactions');
+        const count = await interactions.countDocuments();
+        res.json({ totalVisits: count });
+    } catch (error) {
+        console.error('Error fetching total visits:', error);
+        res.status(500).json({ message: 'Error fetching total visits' });
+    }
+});
+
+// Delete user endpoint
+app.delete('/deleteUser/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const database = client.db('CodeSummary');
+        const users = database.collection('users');
+        const result = await users.deleteOne({ _id: new ObjectId(userId) });
+        console.log(result);
+        if (result.deletedCount === 1) {
+            res.status(200).json({ success: true, message: "User deleted successfully" });
+        } else {
+            res.status(404).json({ success: false, message: "User not found" });
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ message: 'Server Error', error: error.message });
+    }
+});
