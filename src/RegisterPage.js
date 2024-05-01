@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate hook
+
+import styles from './styles/LoginStyles.module.css';
+
 
 function RegisterPage() {
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState(''); // Define state for confirmPassword
+  const [errorMessage] = useState(''); // For navigation after successful registration
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -16,31 +22,34 @@ function RegisterPage() {
     const data = await response.text();
     console.log(data);
     alert(data);
+    navigate('/login');
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <button type="submit">Register</button>
+    <div className={styles.container}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h3 className={styles.title}>Register</h3>
+        <input
+          className={styles.input}
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+        <input
+          className={styles.input}
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+       
+        <button className={styles.button} type="submit">Register</button>
+        {errorMessage && <p className={styles.error}>{errorMessage}</p>}
+        <div className="text-center mt-4">
+          <p>Already have an account? <Link to="/login" className={styles.link}>Login</Link></p>
         </div>
       </form>
     </div>

@@ -1,6 +1,8 @@
 import React, { useState,useContext } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useNavigate, Link } from 'react-router-dom'; // Import useNavigate hook
 import { UserContext } from './UserContext';
+import styles from './styles/LoginStyles.module.css';
+
 
 function LoginPage() {
     const [username, setUsername] = useState('');
@@ -43,21 +45,16 @@ function LoginPage() {
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Username:</label>
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+        <div className={styles.container}>
+            <form onSubmit={handleSubmit} className={styles.form}>
+                <h3 className={styles.title}>Login Here</h3>
+                <input className={styles.input} type="text" placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} required />
+                <input className={styles.input} type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
+                <button className={styles.button} type="submit">Log In</button>
+                {errorMessage && <p className={styles.error}>{errorMessage}</p>}
+                <div className="text-center mt-4">
+                    <p>No account?  <Link to="/register"  className={styles.link}>Register</Link> </p>
                 </div>
-                <div>
-                    <label>Password:</label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                </div>
-                <div>
-                    <button type="submit">Login</button>
-                </div>
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             </form>
         </div>
     );
