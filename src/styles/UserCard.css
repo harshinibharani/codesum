@@ -1,0 +1,151 @@
+.card {
+    width: 350px; /* Adjust width as needed */
+    height: 350px; /* Adjust height as needed */
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-average {
+    width: auto; /* Adjust width as needed */
+    height: 350px; /* Adjust height as needed */
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-average {
+    flex: 1; /* Each card will take up equal space */
+    margin: 10px; /* Adds some space between the cards */
+    padding: 20px; /* Adds some space inside each card */
+    background-color: #f8f9fa; /* Light background color for the card */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Adds subtle shadow */
+    border-radius: 8px; /* Rounded corners for the cards */
+}
+
+.card-average img {
+    margin-right: 20px; /* Space between the image and the text */
+}
+
+.card-average .content {
+    flex-grow: 1; /* Allow content to take up the remaining space */
+}
+
+.card-average .users {
+    font-size: 16px; /* Larger text size for better readability */
+    margin-bottom: 5px; /* Space between lines */
+}
+
+.card-average .message {
+    font-size: 18px; /* Slightly larger text size for messages */
+    color: #666; /* Dimmed text color for messages */
+}
+ 
+
+.icon {
+    width: 40px;
+    height: 40px;
+   
+  
+}
+
+.users {
+    font-size: 1.5em;
+    color: #333;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.label {
+    font-size: 1em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.dashboard {
+    display: flex;
+    justify-content: space-around; /* Adjusts the spacing around items */
+    align-items: center; /* Vertically centers items if their heights differ */
+}
+
+.card {
+    flex: 1; /* Each card will take up equal space */
+    margin: 10px; /* Adds some space between the cards */
+    padding: 20px; /* Adds some space inside each card */
+    background-color: #f8f9fa; /* Light background color for the card */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Adds subtle shadow */
+    border-radius: 8px; /* Rounded corners for the cards */
+}
+
+.icon {
+    font-size: 30px; /* Larger icons */
+    margin-bottom: 10px; /* Space below the icon */
+}
+
+.users {
+    font-size: 24px; /* Larger text for users/visits number */
+    font-weight: bold; /* Makes the number bold */
+}
+
+.label {
+    font-size: 18px; /* Standard text size for labels */
+    color: #666; /* Dimmed color for label text */
+}
+
+.stats-container {
+    display: flex; /* Display children side by side */
+    justify-content: space-around; /* Space out the stat divs */
+    width: 100%; /* Take the full width of the content area */
+}
+
+.stat {
+    display: flex;
+    flex-direction: column; /* Stack numbers on top of labels */
+    align-items: center; /* Center the items horizontally */
+}
+
+.number {
+    font-size: 1.5rem; /* Larger font size for numbers */
+    font-weight: bold; /* Make numbers bold */
+}
+
+.label {
+    font-size: 1rem; /* Standard font size for labels */
+}
+
+.content {
+    display: flex;
+    flex-grow: 1;
+    align-items: center; /* Align items vertically center in the content div */
+    width: 100%;
+}
+
+
+.card-chart {
+    width: auto; /* Adjust width as needed */
+    height: 350px; /* Adjust height as needed */
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-chart {
+    flex: 1; /* Each card will take up equal space */
+    margin: 10px; /* Adds some space between the cards */
+    padding: 20px; /* Adds some space inside each card */
+    background-color: #f8f9fa; /* Light background color for the card */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Adds subtle shadow */
+    border-radius: 8px; /* Rounded corners for the cards */
+}

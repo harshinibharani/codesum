@@ -3,7 +3,8 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #1f4447, #01b7c1);
+    /*background: linear-gradient(135deg, #1f4447, #01b7c1);*/
+    background: radial-gradient(circle, #01b7c1, #1f4447);
     font-family: 'Poppins', sans-serif;
 }
   
@@ -30,7 +31,7 @@
 }
 
 .input::placeholder {
-    color: lightgrey; /* Sets the placeholder text color to light grey */
+    color: rgba(255, 255, 255, 0.961); /* Sets the placeholder text color to light grey */
 }
 
 .title {
@@ -60,6 +61,8 @@
 .button:hover {
     background-color: #e0e1e7;
 }
+
+
 
 .error {
     color: #f55;
