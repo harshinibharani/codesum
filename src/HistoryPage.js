@@ -73,7 +73,7 @@ function HistoryPage() {
                 <Grid container spacing={2}>
                     {history.map((item, index) => (
                         <Grid key={index} item xs={12} sm={6} md={4}>
-                            <Card sx={{ height: 350 }}>
+                            <Card sx={{ height: 350, backgroundColor: '#f8f9fa' }}>
                                 <CardContent sx={{ maxHeight: 300, overflowY: 'auto' }}>
                                     <Typography variant="h6" component="div">
                                         Input Code

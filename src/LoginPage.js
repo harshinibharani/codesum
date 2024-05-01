@@ -47,7 +47,7 @@ function LoginPage() {
     return (
         <div className={styles.container}>
             <form onSubmit={handleSubmit} className={styles.form}>
-                <h3 className={styles.title}>Login Here</h3>
+                <h3 className={styles.title}>Login</h3>
                 <input className={styles.input} type="text" placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} required />
                 <input className={styles.input} type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
                 <button className={styles.button} type="submit">Log In</button>

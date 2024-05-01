@@ -96,7 +96,9 @@ function Dashboard() {
         setUsefulness('');
         setConsistency('');
         setNaturalness('');
+        setNumberOfSummaries('1'); // Resetting the dropdown value to '1' or any default value you prefer
     };
+    
 
     const saveSelectedSummary = async () => {
         
@@ -119,7 +121,7 @@ function Dashboard() {
                     })
                 });
                 const data = await response.json();
-                
+                resetForm();
             } catch (error) {
                 console.error('Error saving feedback:', error);
             }
@@ -211,8 +213,7 @@ function Dashboard() {
                             {summaries.map((summary, index) => (
                                 <Grid key={index} item xs={12} sm={6} md={4}>
                                 <Card
-                                    variant="outlined"
-                                    sx={{ cursor: 'pointer', border: selectedSummary === index ? '2px solid #01b7c1' : '2px solid transparent' }}
+                                    variant="outlined"sx={{ cursor: 'pointer',backgroundColor: '#f8f9fa', border: selectedSummary === index ? '2px solid #01b7c1' : '2px solid transparent' }}
                                     onClick={() => handleSummarySelection(index)}
                                 >
                                     <CardContent>
