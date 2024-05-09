@@ -1,71 +1,162 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#  CODE SUMMARIZATION AND EVALUATION
 
-## Available Scripts
 
-In the project directory, you can run:
+## About The Project
 
-### `npm start`
+Our software engineering project aims to create an easy-to-use system for code summarization and evaluation. It involves using GPT-3.5 Turbo to generate natural language summaries of source code to make it easier for various users to understand its purpose without deep technical knowledge. The system has three core components:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- User Authentication and Authorization: To secure access, with distinct roles for regular users who summarize and evaluate code, and administrators who manage the system.
+- Code Summarization: Users input code into a text box and the system provides a set of natural language summaries, with an option to select the number of desired results, up to a maximum threshold.
+- Results Evaluation: Users evaluate the summaries based on naturalness, usefulness, and consistency using a 5-point rating scale and can also give feedback in natural language. The system records these evaluations and can calculate and display average scores.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+Our website aims to break down barriers and enable easy understanding of code, making it an invaluable tool for developers, students, and educators alike.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+## Getting Started
+Follow these steps to set up and run the project on your local machine:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Prerequisites
+Before you begin, ensure that you have the following prerequisites installed:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Node.js**: Download and install Node.js from [nodejs.org](https://nodejs.org/).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### Installation Instructions
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. Clone the repository to your local machine:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    ```bash
+    git clone <repository-url>
+    ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. Navigate to the project directory:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+    ```bash
+    cd <project-directory>
+    ```
 
-## Learn More
+3. Install server-side dependencies:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    ```bash
+    npm install
+    ```
+4. Install MongoDB
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    ```bash
+    npm install mongodb
+    ```
+    
+5. For routing, install the react router dom
 
-### Code Splitting
+    ```bash
+    npm install react-router-dom
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+6. Obtain an API key from [OpenAI](https://openai.com/index/openai-api/).
+7. Visit the MongoDB website, create a new database or cluster by following the instructions provided in the MongoDB documentation. Remember to note down the "Connect to your application URI" for the database, as you will need it.
 
-### Analyzing the Bundle Size
+8. Create two .env files - one in the root folder and the other in the my-backend folder
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+    ```bash
+    REACT_APP_API_KEY = 'enter_your_api' -> in the root folder
+    MONGO_URI = 'your-mongodb-uri' -> in the my-backend folder
+    ```
+   
+    
 
-### Making a Progressive Web App
+## Running the Application
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Now that you have installed all dependencies, you can run the application. Ensure that your MongoDB server is running.
 
-### Advanced Configuration
+1. Start the server:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+    ```bash
+    cd my-backend
+    node server.js
+    ```
 
-### Deployment
+2. Start the client:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+    ```bash
+    npm start
+    ```
 
-### `npm run build` fails to minify
+The application should now be running locally. You can access it in your web browser at `http://localhost:3000/`.
+## Usage
+### LoginPage.js
+- ⁠Implements a login page using React where users can log in by submitting their credentials.
+- ⁠Prompts users to update their password through a change password dialog if the current password is "default."
+-  ⁠Redirects authenticated users to their respective dashboards based on their roles.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# codesum
+### RegisterPage.js
+- ⁠Implements a registration page using React that allows new users to create an account.
+-   ⁠Validates the password, ensuring it meets specific criteria (length, character types) before enabling registration.
+-  ⁠Redirects successfully registered users to the login page after form submission.
+
+### Dashboard.js
+-  Users can input code, specify the number of desired summaries, and submit to receive insights generated by OpenAI's model.
+- The dashboard allows users to select, review, and provide detailed feedback on each summary, enhancing the interactive experience.
+-  Features navigational links for user history and logout, with a responsive design powered by Material-UI for optimal usability.
+
+### HistoryPage.js
+- Enables users to view a historical log of their interactions, showcasing details such as input code and summary evaluations, with an emphasis on user-centric data security and privacy.
+- Incorporates navigational functionality for easy access to the dashboard and a logout feature, ensuring a seamless user experience and secure session termination.
+- Utilizes Material-UI components for a responsive layout, ensuring that history data is presented in an accessible and aesthetically pleasing manner.
+
+### adminDashboard.js
+
+- Implements an admin dashboard to provide user statistics, averages, and controls to navigate, manage roles, and logout.
+-  Lists all users except the currently logged-in admin, providing checkboxes to select users for fetching their histories and displaying them.
+-  Fetches and displays statistical data such as new users, total visits, and average scores (naturalness, consistency, usefulness) for selected or all users.
+-  Shows each selected user's detailed history, including code summaries and feedback.
+
+### ManageRoles.js
+
+- This component allows administrators to manage user roles within a system, offering capabilities such as adding new users, updating roles, and deleting users as needed, enhancing administrative control and user management efficiency.
+- Incorporates real-time search functionality to filter users based on the query, along with interactive dialogs for creating new users, providing a responsive and user-friendly interface for administrators.
+- Features navigation options to administrative functions and secure logout capabilities, ensuring a smooth transition between different administrative tasks and secure management of user sessions.
+
+
+
+
+
+
+## Running Tests
+
+To run tests, run the following command
+
+```bash
+  npm install --save-dev jest @testing-library/react @testing-library/jest-dom@testing-library/user-event
+  npm test
+```
+
+## Demo
+
+Video link - https://www.youtube.com/watch?v=OUhOUc4rdFQ
+
+
+## Built With
+
+**Client:** [![React.js](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+
+
+**Server:** 
+[![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/) 
+[![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)](https://expressjs.com/)
+[![GPT](https://img.shields.io/badge/chatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white)](https://platform.openai.com/docs/models/gpt-3-5-turbo)
+
+
+
+**Database:** 
+[![Mongo DB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+
+
+## Authors
+
+- Harshini Bharanidharan
+- Mahima Sundararajan
+- Meghana Krishnan
+- Tejas Sivan
+
