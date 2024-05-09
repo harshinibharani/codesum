@@ -1,5 +1,4 @@
-/* Google Font Import Link */
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -7,7 +6,8 @@
   font-family: 'Poppins', sans-serif;
 
 }
-nav .title a{
+
+nav .title a {
   font-size: 28px;
   position: fixed;
   top: 10px;
@@ -17,11 +17,11 @@ nav .title a{
   margin-bottom: 30px;
 }
 
-nav.sticky .title a{
+nav.sticky .title a {
   color: #fff;
 }
 
-nav{
+nav {
   position: sticky;
   top: 0;
   left: 0;
@@ -33,13 +33,12 @@ nav{
 
 nav.sticky {
   padding: 15px 20px;
-  /* background: linear-gradient(135deg, #01303f, #02577a);  */
   background: #05a2aa;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
 
 
-nav .nav-content{
+nav .nav-content {
   height: 100%;
   max-width: 1200px;
   margin: auto;
@@ -47,21 +46,26 @@ nav .nav-content{
   align-items: center;
   justify-content: space-between;
 }
-nav .logo a{
+
+nav .logo a {
   font-size: 35px;
   color: #4070f4;
 }
-nav.sticky .logo a{
+
+nav.sticky .logo a {
   color: #fff;
 }
-.nav-content .nav-links{
+
+.nav-content .nav-links {
   display: flex;
 }
-.nav-content .nav-links li{
+
+.nav-content .nav-links li {
   list-style: none;
   margin: 0 8px;
 }
- .nav-links li a{
+
+.nav-links li a {
   text-decoration: none;
   color: #0E2431;
   font-size: 18px;
@@ -69,33 +73,38 @@ nav.sticky .logo a{
   padding: 10px 4px;
   transition: all 0.3s ease;
 }
- .nav-links li a:hover{
-   color: #4070f4;
- }
- nav.sticky .nav-links li a{
-   color: #fff;
-   transition: all 0.4s ease;
+
+.nav-links li a:hover {
+  color: #4070f4;
 }
- nav.sticky .nav-links li a:hover{
+
+nav.sticky .nav-links li a {
+  color: #fff;
+  transition: all 0.4s ease;
+}
+
+nav.sticky .nav-links li a:hover {
   color: #0E2431;
 }
-.home{
+
+.home {
   height: 100vh;
   width: 100%;
-  
+
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   font-family: 'Ubuntu', sans-serif;
 }
-h2{
+
+h2 {
   font-size: 30px;
   margin-bottom: 6px;
   color: #4070f4;
 }
-.text{
+
+.text {
   text-align: justify;
   padding: 40px 80px;
   box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
 }
-

@@ -1,4 +1,4 @@
-require('dotenv').config(); // This loads your environment variables from a .env file
+require('dotenv').config();
 const express = require('express');
 const { MongoClient, ObjectId } = require('mongodb');
 const cors = require('cors');
@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 app.use(cors());
-app.use(express.json()); // This middleware is used to parse JSON bodies
+app.use(express.json());
 
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
@@ -43,26 +43,25 @@ app.post('/login', async (req, res) => {
         // Compare the provided password with the stored hashed password
         const isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
-            const dateString = new Date().toLocaleDateString('en-CA'); // Canada's locale uses YYYY-MM-DD format
-            console.log(dateString);
+            const dateString = new Date().toLocaleDateString('en-CA');
+            // console.log(dateString);
             await database.collection('interactions').insertOne({
                 userId: user._id,
                 date: dateString,
                 action: 'login'
             });
 
-            // res.json({ message: 'Login successful', user: { id: user._id, username: user.username } });
             return res.json({ message: 'Login successful', user });
         } else {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        
+
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Server Error' });
     }
-   
+
 });
 
 
@@ -88,7 +87,7 @@ app.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         const newUser = {
-            username, 
+            username,
             password: hashedPassword,
             role: 'user'
         };
@@ -166,7 +165,6 @@ app.get('/getUserHistory', async (req, res) => {
     }
 });
 
-// In your server file
 app.get('/getAllUserHistories', async (req, res) => {
     try {
         const database = client.db('CodeSummary');
@@ -183,17 +181,17 @@ app.get('/getAllUserHistories', async (req, res) => {
 // server.js
 app.post('/changeUserRole', async (req, res) => {
     const { userId, role } = req.body;
-   
+
     if (!userId || !role) {
         return res.status(400).json({ message: 'User ID and new role are required' });
     }
 
     try {
-       
+
         const database = client.db('CodeSummary');
         const usersCollection = database.collection('users');
         const result = await usersCollection.updateOne({ _id: new ObjectId(userId) }, { $set: { role } });
-     
+
         if (result.modifiedCount === 1) {
             res.json({ success: true, message: 'Role updated successfully' });
         } else {
@@ -266,7 +264,7 @@ app.delete('/deleteUser/:userId', async (req, res) => {
         const database = client.db('CodeSummary');
         const users = database.collection('users');
         const result = await users.deleteOne({ _id: new ObjectId(userId) });
-        console.log(result);
+        // console.log(result);
         if (result.deletedCount === 1) {
             res.status(200).json({ success: true, message: "User deleted successfully" });
         } else {
@@ -274,6 +272,44 @@ app.delete('/deleteUser/:userId', async (req, res) => {
         }
     } catch (error) {
         console.error('Error deleting user:', error);
+        res.status(500).json({ message: 'Server Error', error: error.message });
+    }
+});
+// Update Password Route
+app.post('/updatePassword', async (req, res) => {
+    const { username, newPassword } = req.body;
+
+    if (!username || !newPassword) {
+        return res.status(400).json({ message: 'Username and new password are required' });
+    }
+
+    const saltRounds = 10; // Adjust as necessary
+
+    try {
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+        // Access the collection
+        const database = client.db('CodeSummary');
+        const usersCollection = database.collection('users');
+
+        // Update the password field for the given username
+        const result = await usersCollection.updateOne(
+            { username },
+            { $set: { password: hashedPassword } }
+        );
+
+        if (result.matchedCount === 1) {
+            if (result.modifiedCount === 1) {
+                res.json({ success: true, message: 'Password updated successfully' });
+            } else {
+                res.json({ success: false, message: 'No changes made to the password' });
+            }
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    } catch (error) {
+        onsole.error('Error updating password:', error);
         res.status(500).json({ message: 'Server Error', error: error.message });
     }
 });

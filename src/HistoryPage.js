@@ -10,7 +10,7 @@ import {
     CircularProgress,
     Button
 } from '@mui/material';
-import './styles/Navbar.css'; // Import your custom Navbar CSS
+import './styles/Navbar.css';
 
 function HistoryPage() {
     const { user, setUser } = useContext(UserContext);
@@ -56,72 +56,72 @@ function HistoryPage() {
     };
 
     return (
-        
-<Box sx={{ backgroundColor: 'linear-gradient(135deg, #287279, #01b7c1)', minHeight: '100vh' }}>            <nav className="sticky">
-                <div className="nav-content">
-                    <div className="title">
-                        <a href="#">My History</a>
-                    </div>
-                    <ul className="nav-links">
-                        <li><a href="#" onClick={handleDashboardClick}>Dashboard</a></li>
-                        <li><a href="#" onClick={handleLogout}>Logout</a></li>
-                    </ul>
+
+        <Box sx={{ backgroundColor: 'linear-gradient(135deg, #287279, #01b7c1)', minHeight: '100vh' }}>            <nav className="sticky">
+            <div className="nav-content">
+                <div className="title">
+                    <a href="#">My History</a>
                 </div>
-            </nav>
+                <ul className="nav-links">
+                    <li><a href="#" onClick={handleDashboardClick}>Dashboard</a></li>
+                    <li><a href="#" onClick={handleLogout}>Logout</a></li>
+                </ul>
+            </div>
+        </nav>
             <div style={{ padding: '50px' }}>
-            {history.length > 0 ? (
-                <Grid container spacing={2}>
-                    {history.map((item, index) => (
-                        <Grid key={index} item xs={12} sm={6} md={4}>
-                            <Card sx={{ height: 350, backgroundColor: '#f8f9fa' }}>
-                                <CardContent sx={{ maxHeight: 300, overflowY: 'auto' }}>
-                                    <Typography variant="h6" component="div">
-                                        Input Code
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {item.inputCode}
-                                    </Typography>
-                                    <Typography variant="h6" component="div">
-                                        Summary
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {item.selectedSummary}
-                                    </Typography>
-                                    <Typography variant="h6" component="div">
-                                        Feedback
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {item.feedback}
-                                    </Typography>
-                                    <Typography variant="h6" component="div">
-                                        Usefulness
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {item.usefulness}
-                                    </Typography>
-                                    <Typography variant="h6" component="div">
-                                        Naturalness
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {item.naturalness}
-                                    </Typography>
-                                    <Typography variant="h6" component="div">
-                                        Consistency
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {item.consistency}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
-            ) : (
-                <Typography variant="body1">No history found.</Typography>
-            )}
+                {history.length > 0 ? (
+                    <Grid container spacing={2}>
+                        {history.map((item, index) => (
+                            <Grid key={index} item xs={12} sm={6} md={4}>
+                                <Card sx={{ height: 350, backgroundColor: '#f8f9fa' }}>
+                                    <CardContent sx={{ maxHeight: 300, overflowY: 'auto' }}>
+                                        <Typography variant="h6" component="div">
+                                            Input Code
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {item.inputCode}
+                                        </Typography>
+                                        <Typography variant="h6" component="div">
+                                            Summary
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {item.selectedSummary}
+                                        </Typography>
+                                        <Typography variant="h6" component="div">
+                                            Feedback
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {item.feedback}
+                                        </Typography>
+                                        <Typography variant="h6" component="div">
+                                            Usefulness
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {item.usefulness}
+                                        </Typography>
+                                        <Typography variant="h6" component="div">
+                                            Naturalness
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {item.naturalness}
+                                        </Typography>
+                                        <Typography variant="h6" component="div">
+                                            Consistency
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            {item.consistency}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+                ) : (
+                    <Typography variant="body1">No history found.</Typography>
+                )}
             </div>
         </Box>
-        
+
     );
 }
 

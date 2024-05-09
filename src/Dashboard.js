@@ -53,7 +53,7 @@ function Dashboard() {
     const [formValid, setFormValid] = useState(false);
 
     const openai = new OpenAI({
-        apiKey: process.env.REACT_APP_API_KEY, dangerouslyAllowBrowser: true // Ensure your API key is stored securely
+        apiKey: process.env.REACT_APP_API_KEY, dangerouslyAllowBrowser: true
     });
 
     const fetchSummaries = async () => {
@@ -96,12 +96,12 @@ function Dashboard() {
         setUsefulness('');
         setConsistency('');
         setNaturalness('');
-        setNumberOfSummaries('1'); // Resetting the dropdown value to '1' or any default value you prefer
+        setNumberOfSummaries('1'); // Resetting the dropdown value to '1' 
     };
-    
+
 
     const saveSelectedSummary = async () => {
-        
+
         if (selectedSummary !== null) {
             const selectedData = summaries[selectedSummary];
             try {
@@ -149,17 +149,17 @@ function Dashboard() {
     return (
         <ThemeProvider theme={theme}>
             <Box sx={{ backgroundColor: 'linear-gradient(135deg, #287279, #01b7c1)', minHeight: '100vh' }}>
-            <nav className="sticky">
-                <div className="nav-content">
-                    <div className="title">
-                        <a href="#">Dashboard</a>
+                <nav className="sticky">
+                    <div className="nav-content">
+                        <div className="title">
+                            <a href="#">Dashboard</a>
+                        </div>
+                        <ul className="nav-links">
+                            <li><a href="#" onClick={handleHistoryClick}>My History</a></li>
+                            <li><a href="#" onClick={handleLogout}>Logout</a></li>
+                        </ul>
                     </div>
-                    <ul className="nav-links">
-                        <li><a href="#" onClick={handleHistoryClick}>My History</a></li>
-                        <li><a href="#" onClick={handleLogout}>Logout</a></li>
-                    </ul>
-                </div>
-            </nav>
+                </nav>
                 <Box sx={{ px: 4, py: 4 }}>
                     <Typography variant="h4" gutterBottom>
                         Hi, {user ? user.username : 'Guest'} 👋
@@ -183,7 +183,7 @@ function Dashboard() {
                                 id="summaryCount"
                                 value={numberOfSummaries}
                                 onChange={e => setNumberOfSummaries(e.target.value)}
-                                label="Number of Summaries" // Needed for the outlined variant
+                                label="Number of Summaries"
                             >
                                 {Array.from({ length: 10 }, (_, i) => i + 1).map(number => (
                                     <MenuItem key={number} value={number}>
@@ -200,7 +200,7 @@ function Dashboard() {
                             Clear
                         </Button>
                     </form>
-                    
+
                     <Box sx={{ mt: 2 }}>
                         <Typography variant="h5" gutterBottom>
                             Summaries
@@ -212,20 +212,22 @@ function Dashboard() {
                         <Grid container spacing={2}>
                             {summaries.map((summary, index) => (
                                 <Grid key={index} item xs={12} sm={6} md={4}>
-                                <Card
-                                    variant="outlined"sx={{ cursor: 'pointer',backgroundColor: '#f8f9fa', border: selectedSummary === index ? '2px solid #01b7c1' : '2px solid transparent' }}
-                                    onClick={() => handleSummarySelection(index)}
-                                >
-                                    <CardContent>
-                                        <Typography variant="body1" gutterBottom sx={{ textAlign: 'justify' }}>
-                                            {summary}
-                                        </Typography>
-                                    </CardContent>
-                                    <CardActions>
-                                        <Button size="small">Select</Button>
-                                    </CardActions>
-                                </Card>
-                            </Grid>
+                                    <Card
+                                        variant="outlined" sx={{ cursor: 'pointer', backgroundColor: '#f8f9fa', border: selectedSummary === index ? '2px solid #01b7c1' : '2px solid transparent' }}
+                                        onClick={() => handleSummarySelection(index)}
+                                    >
+                                        <CardContent>
+                                            <Typography variant="body1" gutterBottom sx={{ textAlign: 'justify' }}>
+                                                <strong>Summary {index + 1}</strong>
+                                                <br />
+                                                {summary}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions>
+                                            <Button size="small">Select</Button>
+                                        </CardActions>
+                                    </Card>
+                                </Grid>
                             ))}
                         </Grid>
                     ) : (

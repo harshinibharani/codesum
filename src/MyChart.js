@@ -71,7 +71,7 @@ function MyChart() {
     }
   };
 
-  // Fetch data on component mount
+
   useEffect(() => {
     fetchData();
   }, []); // Empty dependency array means this effect runs only once after the initial render
